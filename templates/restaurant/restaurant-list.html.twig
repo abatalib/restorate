@@ -1,0 +1,55 @@
+{% if restaurants is empty %}
+    <div class="col-md-12 mb-5">
+        <h1 class="text-danger">Pas de données</h1>
+    </div>
+{% else %}
+    {% for r in restaurants %}
+        {% set img = r.resto.medias.first() ? r.resto.medias.first().url : "NA"%}
+
+        <div class="col-md-4 col-sm-12 mb-4">
+
+            <div class="card card-resto-home" style="border-style: hidden">
+                <a href="{{ path('restaurant_page_detail_restaurant', {"restaurant_id": r.resto.id}) }}">
+                    {% if img is same as("NA") %}
+                        <img src="{{ asset('assets/images/resto1.jpg') }}" class="img-resto">
+                    {% else %}
+                        <img src="{{ asset('assets/photos_uploaded/' ~ img) }}"
+                             alt=""
+                             class="img-resto">
+                    {% endif %}
+                </a>
+                <div class="card-body py-2">
+                    <a href="{{ path('restaurant_page_detail_restaurant', {"restaurant_id": r.resto.id}) }}">
+                        <h5 class="card-title mb-1 link-title-card">{{ r.resto.name }}</h5>
+                    </a>
+                    <h5 class="card-title mb-1">{{ r.resto.city.name }}</h5>
+                    <small><b>{{ r.avgNotes | number_format(1) }} / 5</b> ({{ r.countReviews }} avis)</small>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur consequuntur doloremque doloribus</p>
+                    {# supprimer ou modifier #}
+                    {# ne s'affichera sauf si la source (src) est depuis controller restaurateur  #}
+                    {% if is_granted('ROLE_RESTAURATEUR') and src is same as("restaurateur") %}
+                        <div class="text-end">
+{#                            pour modifier#}
+                            <a href="{{ path('restaurateur_page_edit_resto',{'restaurant':r.resto.id}) }}"
+                                    class="btn btn-outline-dark me-2">
+                                <i class="far fa-edit"></i>
+                            </a>
+{#                            pour supprimer #}
+                            <form method="post" class="d-inline"
+                                  action="{{ path('restaurateur_page_delete_resto',{'restaurant':r.resto.id}) }}"
+                                  onsubmit="return confirm('Etes-vous sûr de supprimer ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ r.resto.id) }}">
+                                <button class="btn btn-outline-danger">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <hr>
+        </div>
+    {% endfor %}
+{% endif %}

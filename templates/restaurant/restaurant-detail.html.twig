@@ -1,0 +1,58 @@
+{% extends 'template.html.twig' %}
+
+{% block rubriqueTitle %}Détails restaurant{% endblock %}
+
+{% block pageCorps %}
+    <div class="row">
+        {% if(restaurant is empty) %}
+            <div class="col-md-12 mb-5">
+                <h1 class="text-danger">Pas de données</h1>
+            </div>
+        {% else %}
+            <div class="col-md-12 mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <table>
+                            <tr>
+                                <td>
+                                    {# si aucune photo n'existe dans la BD, on affiche une photo générique #}
+                                    {% if( medias is not empty) %}
+                                        <img src="{{ asset('assets/photos_uploaded/' ~ medias[0].url) }}" alt="{{ medias[0].altText }}" class="img-resto-large">
+                                    {% else %}
+                                        <img src="{{ asset('assets/images/resto1.jpg') }}" alt="" class="img-resto-large">
+                                    {% endif %}
+                                    <div class="mt-1">
+                                        {% for img in medias %}
+                                            <img src="{{ asset('assets/photos_uploaded/' ~ img.url) }}"
+                                                 alt="{{ img.altText }}"
+                                                 class="img-resto-min d-inline">
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td style="padding-left: 30px; vertical-align: top">
+                                    <h3>{{ restaurant.resto.name }}</h3>
+                                    <h5>{{ restaurant.resto.city.name }}</h5>
+                                    <p>Commandez vos pizzas et faites-vous livrer en moins de 30min</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <h2 class="mb-1">Avis</h2>
+            <h5 class="mb-1">{{ restaurant.avgNotes | number_format(1) }} / 5</h5>
+            <small>{{ restaurant.countReviews }} avis</small>
+            <div class="col-12 mt-3">
+                {% for review in reviews %}
+                    <div class="p-3 bg-light">
+                        <div><b>{{ review.note }}/5</b></div>
+                        <div><small>{{ review.createdAt | date }}</small></div>
+                        <p>{{ review.message }}</p>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

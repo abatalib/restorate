@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=CityRepository::class)
  * @UniqueEntity(
  *     fields = {"name"},
- *     message="Nom existe déjà"
+ *     message="Nom ville existe déjà"
  * )
  */
 class City
@@ -25,7 +25,7 @@ class City
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Nom est obligatoire!")
+     * @Assert\NotBlank(message="Nom ville est obligatoire!")
      */
     private $name;
 

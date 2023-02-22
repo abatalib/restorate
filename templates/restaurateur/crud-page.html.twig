@@ -1,0 +1,29 @@
+{% extends 'template.html.twig' %}
+
+{% block rubriqueTitle %}Ajouter un restaurant{% endblock %}
+
+{% block pageCorps %}
+    {% for err in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ err }}
+        </div>
+    {% endfor %}
+
+    {{ form_start(form,{'attr': {'id': 'formAddResto'}}) }}
+        <div class="row">
+            <div class="col">{{ form_row(form.name) }}</div>
+            <div class="col">{{ form_row(form.city) }}</div>
+        </div>
+        <div class="row">
+            <div class="col">{{ form_row(form.images, {'attr': {'accept': '.gif, .jpeg, .png, .jpg' }}) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-save-resto">
+                <span class="spinner-border text-white d-none js-spinner-save" role="status" style="width: 15px; height: 15px">
+                    <span class="visually-hidden">Loading...</span>
+                </span>
+            <i class="fa-solid fa-check js-check-save"></i> Enregistrer
+        </button>
+        <a href="{{ path('restaurateur_page_profil') }}" class="btn btn-secondary">Annuler</a>
+    {{ form_end(form) }}
+
+{% endblock %}

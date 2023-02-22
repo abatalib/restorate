@@ -1,0 +1,29 @@
+a{
+    text-decoration: none;
+    color:#333;
+}
+.img-resto{
+    width: 350px;
+    height: 150px;
+}
+.img-resto-large{
+    width: 500px;
+    height: 500px;
+}
+.img-resto-large, .img-resto, .img-resto-min {
+    border-radius: 10px;
+}
+.img-resto-min{
+    width:80px;
+    height: 80px;
+    cursor: pointer;
+}
+.btn-add-resto{
+    width: 80px;
+    float: right;
+}
+.card-resto-home:hover{
+    transform: scale(1.1);
+    transition-delay: 0.1s;
+    transition-duration: 0.8s;
+}

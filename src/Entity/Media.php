@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,7 +22,7 @@ class Media
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Restaurant::class, inversedBy="url")
+     * @ORM\ManyToOne(targetEntity=Restaurant::class, inversedBy="medias")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank (message="Le restaurant est obligatoire!")
      */
@@ -30,11 +31,13 @@ class Media
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank (message="Le chemin est obligatoire!")
+     * @Groups({"list_per_resto","list"})
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"list_per_resto","list"})
      */
     private $alt_text;
 
