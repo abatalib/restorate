@@ -1,6 +1,6 @@
 {% extends 'template.html.twig' %}
 
-{% block rubriqueTitle %}Ajouter un restaurant{% endblock %}
+{% block rubriqueTitle %}Mettre à jour un restaurant{% endblock %}
 
 {% block pageCorps %}
     {% for err in app.flashes('error') %}
@@ -25,5 +25,5 @@
         </button>
         <a href="{{ path('restaurateur_page_profil') }}" class="btn btn-secondary">Annuler</a>
     {{ form_end(form) }}
-
+{{ include('restaurateur/restaurant-photos.html.twig') }}
 {% endblock %}

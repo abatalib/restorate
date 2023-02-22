@@ -1,0 +1,32 @@
+{% extends 'template-without-menu.html.twig' %}
+
+{% block pageCorps %}
+
+    <div class="row mt-5">
+        <div class="col-md-12 mb-5">
+            <div class="card">
+                <div class="card-body">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="mt-1">
+                                    {% for p in medias %}
+                                        <div class="position-relative d-inline-block" style="width: 200px; height: 200px">
+                                            <img src="{{ asset('assets/photos_uploaded/' ~ p.url) }}"
+                                                 alt="{{ p.altText }}"
+                                                 class="img-resto-update-min d-inline position-relative">
+                                            <button class="btn btn-danger position-absolute btn-delete-photo" id="{{ p.id }}">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ include('restaurateur/fragments/confirm-delete-photo-modal.html.twig') }}
+{% endblock %}

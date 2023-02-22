@@ -4,9 +4,12 @@ namespace App\Controller\SpaceRestaurateur;
 
 use App\Entity\Media;
 use App\Entity\Restaurant;
+use App\Entity\User;
 use App\Form\RestaurantType;
+use App\Repository\MediaRepository;
 use App\Repository\RestaurantRepository;
 use App\Service\RestaurantService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,15 +140,17 @@ class RestaurateurController extends AbstractController
             return $this->redirectToRoute('restaurateur_page_profil');
         }
 
+        $media=$restaurant->getMedias();
         return $this->render('restaurateur/crud-page.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'medias'=>$media
         ]);
     }
 
     /**
      * @Route("/restaurant/delete/{restaurant}", name="restaurateur_page_delete_resto", methods={"POST"})
      */
-    public function delResto(?Restaurant            $restaurant,
+    public function deleteResto(?Restaurant            $restaurant,
                              Request                $request,
                              EntityManagerInterface $manager): Response
     {
@@ -154,6 +159,7 @@ class RestaurateurController extends AbstractController
                 $restaurant = new Restaurant();
             }
 
+            //récupérer le token pour s'assurer de la source
             $submittedToken = $request->request->get('_token');
 
             if ($this->isCsrfTokenValid('delete' . $restaurant->getId(), $submittedToken)) {
@@ -173,5 +179,47 @@ class RestaurateurController extends AbstractController
                 'message' => $e->getMessage()
             ], 400);
         }
+    }
+
+    /**
+     * @Route("/photos/{user}/{restaurant}",name="restaurateur_page_get_photos")
+     */
+    public function getPhotos(?User $user, ?Restaurant $restaurant, MediaRepository $mediaRepository)
+    {
+        //s'assurer qu'il s'agit du user en cours et que le restaurant existe bel et bien
+        if($restaurant && $user===$this->getUser())
+            $photos = $mediaRepository->findBy(["restaurant"=>$restaurant]);
+        else
+            $photos="";
+
+        return $this->render('restaurateur/restaurant-photos.html.twig',[
+            "medias"=>$photos
+        ]);
+    }
+
+    /**
+     * @Route("/restaurant/photos/delete/{media}",name="restaurateur_page_delete_photo")
+     */
+    public function deletePhotos(?Media $media,
+                                 Request $request,
+                                 EntityManagerInterface $manager): Response
+    {
+         //récupérer le token pour s'assurer de la source
+        $submittedToken = $request->request->get('_token');
+
+        if ($media &&
+            $this->isCsrfTokenValid('delete.photo'.$this->getUser()->getPassword(), $submittedToken)) {
+
+            $manager->remove($media);
+            $manager->flush();
+            //appel service pour supprimer les photos
+            $this->restaurantService->deletePhotos(new ArrayCollection([$media]));
+        }
+
+        return $this->redirectToRoute("restaurateur_page_edit_resto",[
+            'user'=>$this->getUser()->getId(),
+            'restaurant'=>$media->getRestaurant()->getId()
+        ]);
+
     }
 }

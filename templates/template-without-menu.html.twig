@@ -23,16 +23,8 @@
 <body>
 <div class="wrapper">
 
-{#    récupérer le path en cours pour activer rubrique menu#}
-    {% set currentPath = path(app.request.attributes.get('_route'),
-        app.request.attributes.get('_route_params')) %}
-
-    {{ include('fragments/menu.html.twig') }}
-
     <div class="container">
-        <div class="p-5 mb-4 bg-secondary text-white rounded">
-            <h1>{% block rubriqueTitle %}{% endblock %}</h1>
-        </div>
+
         {% block pageCorps %}{% endblock %}
 
     </div>

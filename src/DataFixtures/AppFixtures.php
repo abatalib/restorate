@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\City;
 use App\Entity\Restaurant;
+use App\Entity\Review;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\CityRepository;
@@ -59,7 +60,7 @@ class AppFixtures extends Fixture
         $roleC = "ROLE_CLIENT";
 
         //création de 30 users (client/restaurateur)
-        for($i=0;$i<30;$i++):
+        for($i=0;$i<40;$i++):
              $user = new User();
             //random role soit client ou restaurateur
             $role = ($i % 3==0) ? $roleR : $roleC;
@@ -88,22 +89,15 @@ class AppFixtures extends Fixture
 
                 $manager->persist($rest);
 
+                $review = new Review();
+                $review->setRestaurant($rest)
+                        ->setUser($user)
+                        ->setMessage("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores aspernatur deserunt dolor dolorum, ipsa laudantium, nam nemo nobis, !")
+                        ->setNote(rand(1,5))
+                        ->setCreatedAt($this->communService->generateDate());
+                $manager->persist($review);
             endif;
         endfor;
-
-        $manager->flush();
-
-
-        //affecter les cities aux restaurants
-//        $restaurants = $this->restaurantRepository->findAll();
-//        foreach($restaurants as $rest):
-//            //prendre au hasard un city de la BD
-//            $rndId=random_int(1,50);
-//            $city = $this->cityRepository->findOneBy(['id'=>$rndId]);
-//            $rest->setCity($city);
-//            $manager->persist($rest);
-//        endforeach;
-
 
         $manager->flush();
     }

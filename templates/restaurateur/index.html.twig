@@ -9,7 +9,10 @@ Gérer vos restaurants
 {% block pageCorps %}
 <div class="row">
     <div class="col-12">
-        <a href="{{ path('restaurateur_page_add_resto') }}" class="btn btn-primary btn-add-resto mb-3">
+        <a href="{{ path('app_logout') }}" class="btn btn-outline-dark float-end">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+        <a href="{{ path('restaurateur_page_add_resto') }}" class="btn btn-primary btn-add-resto float-start mb-3">
             <i class="fas fa-plus"></i>
         </a>
     </div>

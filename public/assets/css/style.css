@@ -18,6 +18,16 @@ a{
     height: 80px;
     cursor: pointer;
 }
+.img-resto-update-min{
+    width: 200px;
+    height: 200px;
+}
+.btn-delete-photo{
+    z-index: 1;
+    right: 10px;
+    bottom: 10px;
+    padding: 1px 3px;
+}
 .btn-add-resto{
     width: 80px;
     float: right;
