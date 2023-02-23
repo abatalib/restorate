@@ -3,7 +3,7 @@
         <h1 class="text-danger">Pas de données</h1>
     </div>
 {% else %}
-    {% for r in restaurants %}
+    {% for r in restoCommented %}
         {% set img = r.resto.medias.first() ? r.resto.medias.first().url : "NA"%}
 
         <div class="col-md-4 col-sm-12">
@@ -25,13 +25,6 @@
                     <h5 class="card-title mb-1">{{ r.resto.city.name }}</h5>
                     <small><b>{{ r.avgNotes | number_format(1) }} / 5</b> ({{ r.countReviews }} avis)</small>
                     <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur consequuntur doloremque doloribus</p>
-
-                    {# supprimer ou modifier #}
-                    {# ne s'affichera sauf si la source (src) est depuis controller restaurateur  #}
-                    {% if is_granted('ROLE_RESTAURATEUR') and src is same as("restaurateur") %}
-                        {{ include('restaurant/fragments/btns-crud-resto.html.twig') }}
-                    {% endif %}
-
                 </div>
             </div>
             <hr>

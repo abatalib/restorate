@@ -1,0 +1,64 @@
+{% extends 'template.html.twig' %}
+
+{% block rubriqueTitle %}Ajout de commentaire{% endblock %}
+
+{% block pageCorps %}
+    <div class="row">
+        {% for err in app.flashes('error') %}
+            <div class="alert alert-danger" role="alert">
+                {{ err }}
+            </div>
+        {% endfor %}
+        {% for s in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">
+                {{ s }}
+            </div>
+        {% endfor %}
+        {% if(restaurant is empty) %}
+            <div class="col-md-12 mb-5">
+                <h1 class="text-danger">Pas de données</h1>
+            </div>
+        {% else %}
+            <div class="col-md-12 mb-5">
+                <div class="card">
+                    <div class="card-body">
+                        <table>
+                            <tr>
+                                <td>
+                                    {# si aucune photo n'existe dans la BD, on affiche une photo générique #}
+                                    {% if( medias is not empty) %}
+                                        <img src="{{ asset('assets/photos_uploaded/' ~ medias[0].url) }}" alt="{{ medias[0].altText }}" class="img-resto-update-min">
+                                    {% else %}
+                                        <img src="{{ asset('assets/images/resto1.jpg') }}" alt="" class="img-resto-update-min">
+                                    {% endif %}
+                                </td>
+                                <td style="padding-left: 30px; vertical-align: top">
+                                    <h3>{{ restaurant.resto.name }}</h3>
+                                    <h5>{{ restaurant.resto.city.name }}</h5>
+                                    <i class="fa-solid fa-ranking-star"></i> <small class="text-comment mb-1">{{ restaurant.avgNotes | number_format(1) }} / 5</small>
+
+                                    <i class="fa-solid fa-comment-dots ms-3"></i> <small class="text-comment">{{ restaurant.countReviews }} commentaire(s)</small>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        <div class="col-md-12 mb-5">
+            {{ form_start(form,{'attr': {'id': 'formAddComment'}}) }}
+                <div class="row">
+                    <div class="col">{{ form_row(form.message) }}</div>
+                    <div class="col">{{ form_row(form.note) }}</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-save-comment">
+                <span class="spinner-border text-white d-none js-spinner-save" role="status" style="width: 15px; height: 15px">
+                    <span class="visually-hidden">Loading...</span>
+                </span>
+                    <i class="fa-solid fa-check js-check-save"></i> Enregistrer
+                </button>
+            {{ form_end(form) }}
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

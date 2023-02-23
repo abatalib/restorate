@@ -29,4 +29,21 @@ class HomeController extends AbstractController
             'src'=>'home'
         ]);
     }
+
+    /**
+     * @Route("/private", name="home_page_private", methods={"GET"})
+     */
+    public function privateSpace(): Response
+    {
+        $user=$this->getUser();
+
+        if(!$user):
+            return $this->redirectToRoute("app_login");
+        elseif($user->getRoles()[0]=="ROLE_CLIENT"):
+            return $this->redirectToRoute("client_page_profil");
+        elseif($user->getRoles()[0]=="ROLE_RESTAURATEUR"):
+            return $this->redirectToRoute("restaurateur_page_profil");
+        endif;
+        return new Response("Error");
+    }
 }

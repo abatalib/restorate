@@ -22,10 +22,12 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'app_login';
 
     private UrlGeneratorInterface $urlGenerator;
+    private Security $security;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, Security $security)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->security = $security;
     }
 
     public function authenticate(Request $request): Passport
@@ -48,9 +50,13 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
+        $user_role = $this->security->getUser()->getRoles();
 
-        // For example:
-         return new RedirectResponse($this->urlGenerator->generate("/"));
+            if($user_role[0]=="ROLE_CLIENT"):
+                return new RedirectResponse($this->urlGenerator->generate("client_page_profil"));
+            else:
+                return new RedirectResponse($this->urlGenerator->generate("restaurateur_page_profil"));
+            endif;
     }
 
     protected function getLoginUrl(Request $request): string

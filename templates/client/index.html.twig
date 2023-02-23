@@ -1,0 +1,23 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Profile client{% endblock %}
+
+{% block rubriqueTitle %}
+    Restaurants commentés par vous
+{% endblock %}
+
+{% block pageCorps %}
+    {% for s in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ s }}
+        </div>
+    {% endfor %}
+    {% for err in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ err }}
+        </div>
+    {% endfor %}
+    <div class="row">
+        {{ include('restaurant/restaurant-list.html.twig') }}
+    </div>
+{% endblock %}

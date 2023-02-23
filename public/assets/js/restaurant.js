@@ -1,6 +1,12 @@
 $().ready(function(){
     let id_photo_to_delete=0;
 
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+
+
     showHideSpinner()
     showLargePhoto()
     showModalDeletePhoto()
@@ -8,8 +14,8 @@ $().ready(function(){
 
     function showHideSpinner(){
         $( "#formAddResto" ).submit(function() {
-            $('.js-check-save').toggleClass('d-none');
-            $('.js-spinner-save').toggleClass('d-none');
+            $('.js-check-save').addClass('d-none');
+            $('.js-spinner-save').removeClass('d-none');
             $('.btn-save-resto').prop('disabled',true);
         });
     }

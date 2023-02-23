@@ -48,6 +48,11 @@ class Review
      */
     private $created_at;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resp;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -114,6 +119,18 @@ class Review
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getResp(): ?string
+    {
+        return $this->resp;
+    }
+
+    public function setResp(?string $resp): self
+    {
+        $this->resp = $resp;
 
         return $this;
     }

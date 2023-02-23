@@ -13,9 +13,36 @@
                     <a class="nav-link {% if currentPath is same as('/') %} active {% endif %}" aria-current="page" href="{{ path('home_page') }}">Liste des restaurants</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if currentPath is same as('/restaurateur/') %} active {% endif %}" href="{{ path('restaurateur_page_profil') }}">Espace restaurateur</a>
+                    <a class="nav-link {% if currentPath in ['/restaurateur/','/client/'] %} active {% endif %}" href="{{ path('home_page_private') }}">Espace privé</a>
                 </li>
+
             </ul>
+
+            <div class="btn-group dropstart">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                        {% if app.user is not null %}
+                            {{ (app.user.firstname ~ " " ~ app.user.lastname ~ " (" ~   app.user.userIdentifier ~ ")") }}
+                        {% endif %}
+                </button>
+                <ul class="dropdown-menu">
+                    {% if app.user %}
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                <i class="fa-solid fa-right-from-bracket me-2 mt-1"></i> Déconnexion
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_login') }}">
+                                <i class="fa-solid fa-right-to-bracket"></i> Connexion
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+
         </div>
     </div>
 </nav>

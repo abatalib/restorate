@@ -4,6 +4,16 @@
 
 {% block pageCorps %}
     <div class="row">
+        {% for err in app.flashes('error') %}
+            <div class="alert alert-danger" role="alert">
+                {{ err }}
+            </div>
+        {% endfor %}
+        {% for s in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">
+                {{ s }}
+            </div>
+        {% endfor %}
         {% if(restaurant is empty) %}
             <div class="col-md-12 mb-5">
                 <h1 class="text-danger">Pas de données</h1>
@@ -29,26 +39,47 @@
                                         {% endfor %}
                                     </div>
                                 </td>
-                                <td style="padding-left: 30px; vertical-align: top">
+                                <td class="text-comment" style="padding-left: 30px; vertical-align: top">
                                     <h3>{{ restaurant.resto.name }}</h3>
                                     <h5>{{ restaurant.resto.city.name }}</h5>
-                                    <p>Commandez vos pizzas et faites-vous livrer en moins de 30min</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aspernatur corporis delectus distinctio eaque error fuga fugit harum, illo ipsa minima nihil placeat quam quasi quidem quis sequi sit voluptatum.</p>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
+            <hr class="mb-2">
+                <div class="mb-2">
+                    <a href="{{ path('comment_page_add', {'restaurant': restaurant.resto.id}) }}">
+                        <i class="fa-solid fa-comment"></i> Ajouter un commentaire
+                    </a>
+                </div>
             <hr>
-            <h2 class="mb-1">Avis</h2>
-            <h5 class="mb-1">{{ restaurant.avgNotes | number_format(1) }} / 5</h5>
-            <small>{{ restaurant.countReviews }} avis</small>
-            <div class="col-12 mt-3">
+            <h4 class="text-comment mb-1"><i class="fa-solid fa-comments"></i> Commentaire(s)</h4>
+            <h5 class="text-comment mb-1"><i class="fa-solid fa-ranking-star"></i> {{ restaurant.avgNotes | number_format(1) }} / 5</h5>
+            <small class="text-comment">{{ restaurant.countReviews }} commentaire(s)</small>
+            <div class="text-comment col-12 mt-3">
                 {% for review in reviews %}
-                    <div class="p-3 bg-light">
-                        <div><b>{{ review.note }}/5</b></div>
+                    <div class="p-3 bg-light bloc-div-comments">
+{#                        bouton pour la réponse#}
+                        <a href="{{ path('comment_page_reply', {'review': review.id}) }}"
+                            class="float-end">
+                            <i class="fa-solid fa-reply"></i> Répondre
+                        </a>
+                        <div><b>{{ review.user.firstname ~ " " ~ review.user.lastname }}</b></div>
+                        <div><b>{% if review.note>0 %} {{ review.note }}/5 {% else %} <small>Pas de note</small> {% endif %}</b></div>
                         <div><small>{{ review.createdAt | date }}</small></div>
                         <p>{{ review.message }}</p>
+
+{#                        réponse#}
+                        {% if review.resp %}
+                            <div class="v-line">
+                                <small><b>Réponse de {{ restaurant.resto.user.firstname ~ " " ~ restaurant.resto.user.lastname }}</b></small>
+                                <p>{{ review.resp }}</p>
+                            </div>
+                        {% endif %}
+
                     </div>
                     <hr>
                 {% endfor %}

@@ -1,0 +1,20 @@
+<div class="text-end">
+    {#                            pour modifier#}
+    <a href="{{ path('restaurateur_page_edit_resto',{'restaurant':r.resto.id}) }}"
+       class="btn btn-outline-dark me-2"
+       data-bs-container="body" data-bs-trigger="hover focus" data-bs-toggle="popover" data-bs-custom-class="popup-msg"
+       data-bs-placement="top" data-bs-content="Modifier les infos du restaurant (nom, ville, gérer les photos)">
+        <i class="far fa-edit"></i>
+    </a>
+    {#                            pour supprimer #}
+    <form method="post" class="d-inline"
+          action="{{ path('restaurateur_page_delete_resto',{'restaurant':r.resto.id}) }}"
+          onsubmit="return confirm('Etes-vous sûr de supprimer ?')">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ r.resto.id) }}">
+        <button class="btn btn-outline-danger"
+                data-bs-container="body" data-bs-trigger="hover focus" data-bs-toggle="popover" data-bs-custom-class="popup-msg"
+                data-bs-placement="top" data-bs-content="Supprimer ce restaurant">
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
+    </form>
+</div>

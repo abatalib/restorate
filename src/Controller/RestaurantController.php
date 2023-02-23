@@ -44,6 +44,8 @@ class RestaurantController extends AbstractController
                                 MediaRepository $mediaRepository,
                                 ReviewRepository $reviewRepository): Response
     {
+        $medias=""; $reviews=""; $recap="";
+
         if($restaurant_id!=null):
             $medias = $mediaRepository->findBy(['restaurant' => $restaurant_id]) ?? "";
             $reviews = $reviewRepository->findBy(['restaurant' => $restaurant_id]) ?? "";

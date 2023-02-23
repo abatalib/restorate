@@ -43,6 +43,7 @@ class ReviewRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->select('avg(r.note)')
             ->andWhere('r.restaurant = :resto')
+            ->andWhere('r.note > 0')
             ->setParameter('resto', $idResto)
             ->getQuery()
             ->getSingleScalarResult();

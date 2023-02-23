@@ -35,6 +35,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/restaurateur, roles: ROLE_RESTAURATEUR }
+         - { path: ^/client, roles: ROLE_CLIENT }
+         - { path: ^/comment, roles: [ROLE_RESTAURATEUR,ROLE_CLIENT] }
 
 when@test:
     security:

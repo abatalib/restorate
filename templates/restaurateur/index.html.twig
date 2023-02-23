@@ -7,16 +7,49 @@ Gérer vos restaurants
 {% endblock %}
 
 {% block pageCorps %}
+    {% for s in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ s }}
+        </div>
+    {% endfor %}
+    {% for err in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ err }}
+        </div>
+    {% endfor %}
 <div class="row">
     <div class="col-12">
-        <a href="{{ path('app_logout') }}" class="btn btn-outline-dark float-end">
-            <i class="fa-solid fa-right-from-bracket"></i>
-        </a>
-        <a href="{{ path('restaurateur_page_add_resto') }}" class="btn btn-primary btn-add-resto float-start mb-3">
+        <a href="{{ path('restaurateur_page_add_resto') }}" class="btn btn-primary btn-add-resto float-start mb-3"
+           data-bs-container="body" data-bs-trigger="hover focus" data-bs-toggle="popover" data-bs-custom-class="popup-msg"
+           data-bs-placement="top" data-bs-content="Ajouter un restaurant">
             <i class="fas fa-plus"></i>
         </a>
     </div>
-    {{ include('restaurant/restaurant-list.html.twig') }}
+    <div class="col-12">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                    Vos restaurants
+                </a>
+                <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">
+                    Vos commentaires
+                </a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row pt-4">
+                    {{ include('restaurant/restaurant-list.html.twig') }}
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="row pt-4">
+                    {{ include('restaurant/restaurant-list-commented.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

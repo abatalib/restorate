@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Core\Security;
 
 class RestaurantService
 {
@@ -22,12 +23,17 @@ class RestaurantService
      */
     private $reviewRepository;
     private RestaurantRepository $restaurantRepository;
+    private Security $security;
 
-    public function __construct(string $photo_uploaded_directory, ReviewRepository $reviewRepository, RestaurantRepository $restaurantRepository)
+    public function __construct(string $photo_uploaded_directory,
+                                ReviewRepository $reviewRepository,
+                                RestaurantRepository $restaurantRepository,
+                                Security $security)
     {
         $this->photo_uploaded_directory = $photo_uploaded_directory;
         $this->reviewRepository = $reviewRepository;
         $this->restaurantRepository = $restaurantRepository;
+        $this->security = $security;
     }
 
 //    vérifier l'extension des photos
@@ -101,6 +107,18 @@ class RestaurantService
         endforeach;
 
         return $newResult;
+    }
+
+    public function getRestaurantsFromReviews(): array
+    {
+        $restaurants=[];
+        //récupérer les restaurants de l'user connecté depuis ses reviews
+        $reviews = $this->reviewRepository->findBy(['user'=>$this->security->getUser()]) ?? "";
+        foreach($reviews as $r):
+            $restaurants[] = $r->getRestaurant();
+        endforeach;
+
+        return $this->getRestaurants($restaurants) ?? [];
     }
 
     public function getNotesAndMsg($rs): RestaurantRecapDto

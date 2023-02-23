@@ -37,11 +37,12 @@ class RestaurateurController extends AbstractController
     public function profil(RestaurantRepository $restaurantRepository): Response
     {
         //récupérer les restaurants de l'user connecté
-        $restaurants = $restaurantRepository->findBy(["user" => $this->getUser()]) ?? [];
+        $restaurants = $restaurantRepository->findBy(["user" => $this->getUser()], ["created_at"=>"DESC"]) ?? [];
         $newResult = $this->restaurantService->getRestaurants($restaurants) ?? [];
 
         return $this->render('restaurateur/index.html.twig', [
             "restaurants" => $newResult,
+            "restoCommented" => $this->restaurantService->getRestaurantsFromReviews(),
             "src" => "restaurateur"
         ]);
     }
@@ -59,7 +60,7 @@ class RestaurateurController extends AbstractController
         $errorExist = false;
         //instancier restaurant s'il s'agit d'un new sinon
         //le restaurant passé pour edit
-            $restaurant ?? $restaurant = new Restaurant();
+        $restaurant ?? $restaurant = new Restaurant();
 
         //création du formtype
         $form = $this->createForm(RestaurantType::class, $restaurant);
@@ -94,50 +95,51 @@ class RestaurateurController extends AbstractController
                 //si aucun id n'existe, alors c un ajout
                 if (!$restaurant->getid()) {
                     $restaurant->setUser($user);
-                    $restaurant->setCreatedAt(new \DateTimeImmutable());
                     $msg = 'nv';
+                }else{
+                    $restaurant->setUpdatedAt(new \DateTimeImmutable());
                 }
-            }
-            $em->persist($restaurant);
-            $em->flush();
-
-            //là nous avons l'ID du resto, on peut donc générer le nom du fichier
-            //le fichier sera stocké dans d'un dossier qui porte l'id du user 1,2,3,etc
-            //le fichier portera le nom : user-id_rest-id_datetime
-            if ($image):
-                $fileNameToDB = $this->restaurantService->transferFile($image,
-                    [
-                        "userId" => $user->getId(),
-                        "restoId" => $restaurant->getId()
-                    ]
-                );
-                //problème de transfert
-                //sinon ajout url images dans table media
-                if ($fileNameToDB[0] == 'err') {
-                    $this->addFlash('error', "Restaurant ajouté avec succès. Echec lors du transfert d'image " .
-                        $fileNameToDB[1]);
-                } else {
-                    //enregistrer l'image dans la table media
-                    for ($p = 0; $p < sizeof($fileNameToDB); $p++) {
-                        $media = new Media();
-                        $media->setRestaurant($restaurant)
-                            ->setUrl($fileNameToDB[$p])
-                            ->setAltText("Image-" . $restaurant->getName());
-                        $em->persist($media);
-                    }
-                }
-
+                $em->persist($restaurant);
                 $em->flush();
 
-            endif;
+                //là nous avons l'ID du resto, on peut donc générer le nom du fichier
+                //le fichier sera stocké dans d'un dossier qui porte l'id du user 1,2,3,etc
+                //le fichier portera le nom : user-id_rest-id_datetime
+                if ($image):
+                    $fileNameToDB = $this->restaurantService->transferFile($image,
+                        [
+                            "userId" => $user->getId(),
+                            "restoId" => $restaurant->getId()
+                        ]
+                    );
+                    //problème de transfert
+                    //sinon ajout url images dans table media
+                    if ($fileNameToDB[0] == 'err') {
+                        $this->addFlash('error', "Restaurant ajouté avec succès. Echec lors du transfert d'image " .
+                            $fileNameToDB[1]);
+                    } else {
+                        //enregistrer l'image dans la table media
+                        for ($p = 0; $p < sizeof($fileNameToDB); $p++) {
+                            $media = new Media();
+                            $media->setRestaurant($restaurant)
+                                ->setUrl($fileNameToDB[$p])
+                                ->setAltText("Image-" . $restaurant->getName());
+                            $em->persist($media);
+                        }
+                    }
 
-            if ($msg == 'nv') {
-                $this->addFlash('success', 'Création effectuée avec succès');
-            } else {
-                $this->addFlash('success', 'Mise à jour effectuée avec succès');
+                    $em->flush();
+
+                endif;
+
+                if ($msg == 'nv') {
+                    $this->addFlash('success', 'Création effectuée avec succès');
+                } else {
+                    $this->addFlash('success', 'Mise à jour effectuée avec succès');
+                }
+
+                return $this->redirectToRoute('restaurateur_page_profil');
             }
-
-            return $this->redirectToRoute('restaurateur_page_profil');
         }
 
         $media=$restaurant->getMedias();
@@ -186,6 +188,9 @@ class RestaurateurController extends AbstractController
      */
     public function getPhotos(?User $user, ?Restaurant $restaurant, MediaRepository $mediaRepository)
     {
+        if (!$user) {
+            $user = new User();
+        }
         //s'assurer qu'il s'agit du user en cours et que le restaurant existe bel et bien
         if($restaurant && $user===$this->getUser())
             $photos = $mediaRepository->findBy(["restaurant"=>$restaurant]);
