@@ -18,6 +18,14 @@ $().ready(function(){
             $('.js-spinner-save').removeClass('d-none');
             $('.btn-save-resto').prop('disabled',true);
         });
+        $( "#formAddComment" ).submit(function() {
+            $('.js-check-save').addClass('d-none');
+            $('.js-spinner-save').removeClass('d-none');
+            $('.btn-save-resto').prop('disabled',true);
+        });
+        $( "#formSearch" ).submit(function() {
+            $('.js-spinner-save').removeClass('d-none');
+        });
     }
 
 

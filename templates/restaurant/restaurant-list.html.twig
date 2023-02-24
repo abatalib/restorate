@@ -1,8 +1,30 @@
+{% if src == "home" %}
+    {{ form_start(form,{'attr': {'id': 'formSearch'}}) }}
+    <div class="row">
+        <div class="col-6">{{ form_row(form.name) }}</div>
+        <div class="col-4">{{ form_row(form.city) }}</div>
+        <div class="col-2">
+            <button type="submit" class="btn btn-primary btn-search" style="margin-top: 32px">
+                        <span class="spinner-border text-white d-none js-spinner-save" role="status" style="width: 15px; height: 15px">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                <i class="fa-solid fa-magnifying-glass js-check-save"></i>
+            </button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endif %}
+
 {% if restaurants is empty %}
     <div class="col-md-12 mb-5">
         <h1 class="text-danger">Pas de données</h1>
     </div>
 {% else %}
+
+    {% if src == "home" %}
+        {{ include('restaurant/fragments/list-pagination.html.twig') }}
+    {% endif %}
+
     {% for r in restaurants %}
         {% set img = r.resto.medias.first() ? r.resto.medias.first().url : "NA"%}
 
@@ -37,4 +59,7 @@
             <hr>
         </div>
     {% endfor %}
+    {% if src == "home" %}
+        {{ include('restaurant/fragments/list-pagination.html.twig') }}
+    {% endif %}
 {% endif %}

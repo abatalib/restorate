@@ -26,8 +26,8 @@
                             <tr>
                                 <td>
                                     {# si aucune photo n'existe dans la BD, on affiche une photo générique #}
-                                    {% if( medias is not empty) %}
-                                        <img src="{{ asset('assets/photos_uploaded/' ~ medias[0].url) }}" alt="{{ medias[0].altText }}" class="img-resto-update-min">
+                                    {% if( restaurant.resto.medias is not empty) %}
+                                        <img src="{{ asset('assets/photos_uploaded/' ~ restaurant.resto.medias[0].url) }}" alt="{{ restaurant.resto.medias[0].altText }}" class="img-resto-update-min">
                                     {% else %}
                                         <img src="{{ asset('assets/images/resto1.jpg') }}" alt="" class="img-resto-update-min">
                                     {% endif %}
@@ -47,14 +47,15 @@
             <hr>
         <div class="col-md-12 mb-5">
             {{ form_start(form,{'attr': {'id': 'formAddComment'}}) }}
-                <div class="row">
-                    <div class="col">{{ form_row(form.message) }}</div>
-                    <div class="col">{{ form_row(form.note) }}</div>
-                </div>
+                {% if src is same as('add') %}
+                    {{ include('comment/fragments/add-form.html.twig') }}
+                {% else %}
+                    {{ include('comment/fragments/resp-form.html.twig') }}
+                {% endif %}
                 <button type="submit" class="btn btn-primary btn-save-comment">
-                <span class="spinner-border text-white d-none js-spinner-save" role="status" style="width: 15px; height: 15px">
-                    <span class="visually-hidden">Loading...</span>
-                </span>
+                    <span class="spinner-border text-white d-none js-spinner-save" role="status" style="width: 15px; height: 15px">
+                        <span class="visually-hidden">Loading...</span>
+                    </span>
                     <i class="fa-solid fa-check js-check-save"></i> Enregistrer
                 </button>
             {{ form_end(form) }}

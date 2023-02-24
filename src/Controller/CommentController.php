@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Restaurant;
 use App\Entity\Review;
-use App\Form\CommentType;
+use App\Form\ReviewResponseType;
+use App\Form\ReviewType;
 use App\Repository\MediaRepository;
 use App\Repository\ReviewRepository;
 use App\Service\CommentService;
@@ -32,8 +33,6 @@ class CommentController extends AbstractController
      * @Route ("/add/{restaurant}", name="comment_page_add")
      */
     public function addComment(?Restaurant $restaurant,
-                               MediaRepository $mediaRepository,
-                                ReviewRepository $reviewRepository,
                                 RestaurantService $restaurantService,
                                 Request $request,
                                 EntityManagerInterface $manager): Response
@@ -51,12 +50,11 @@ class CommentController extends AbstractController
         endif;
 
 
-        //instancier review s'il s'agit d'un new sinon
-        //le review passé pour edit
+        //instancier review
         $review ?? $review = new Review();
 
         //création du formtype
-        $form = $this->createForm(CommentType::class, $review);
+        $form = $this->createForm(ReviewType::class, $review);
 
         $form->handleRequest($request);
         //récupérer les données
@@ -79,18 +77,12 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('restaurant_page_detail_restaurant', ['restaurant_id'=>$restaurant->getId()]);
         }
         //préparer les données à afficher dans le twig
-        if($restaurant!=null):
-            $medias = $mediaRepository->findBy(['restaurant' => $restaurant]) ?? "";
-            $reviews = $reviewRepository->findBy(['restaurant' => $restaurant]) ?? "";
-            $recap = $restaurantService->getNotesAndMsg($restaurant) ?? "";
-        else:
-            $medias = ""; $reviews = ""; $recap = "";
-        endif;
+        $recap = $restaurantService->getNotesAndMsg($restaurant) ?? "";
+
         return $this->render('comment/add-comment.html.twig', [
             'form' => $form->createView(),
             'restaurant' => $recap,
-            'medias' => $medias,
-            'reviews' => $reviews
+            'src'=>'add'
         ]);
     }
 
@@ -98,8 +90,9 @@ class CommentController extends AbstractController
      * @Route("/reply/{review}", name="comment_page_reply")
      */
     public function reply(?Review $review,
-                            Request $request,
-                            EntityManagerInterface $manager): Response
+                          Request $request,
+                          RestaurantService $restaurantService,
+                          EntityManagerInterface $manager): Response
     {
         //vérifier les conditions avant de continuer
         if(!$review)
@@ -113,7 +106,7 @@ class CommentController extends AbstractController
         endif;
 
         //création du formtype
-        $form = $this->createForm(CommentType::class, $review);
+        $form = $this->createForm(ReviewResponseType::class, $review);
 
         $form->handleRequest($request);
         //récupérer la réponse
@@ -133,19 +126,13 @@ class CommentController extends AbstractController
         }
 
         //préparer les données à afficher dans le twig
-        if($restaurant!=null):
-            $medias = $mediaRepository->findBy(['restaurant' => $restaurant]) ?? "";
-            $reviews = $reviewRepository->findBy(['restaurant' => $restaurant]) ?? "";
-            $recap = $restaurantService->getNotesAndMsg($restaurant) ?? "";
-        else:
-            $medias = ""; $reviews = ""; $recap = "";
-        endif;
+        $recap = $restaurantService->getNotesAndMsg($review->getRestaurant()) ?? "";
 
-        return $this->render('comment/add-response.html.twig.html.twig', [
+
+        return $this->render('comment/add-comment.html.twig', [
             'form' => $form->createView(),
             'restaurant' => $recap,
-            'medias' => $medias,
-            'reviews' => $reviews
+            'src'=>'reply'
         ]);
     }
 }

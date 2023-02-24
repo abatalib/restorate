@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if currentPath is same as('/') %} active {% endif %}" aria-current="page" href="{{ path('home_page') }}">Liste des restaurants</a>
+                    <a class="nav-link {% if 'page' in currentPath %} active {% endif %}" aria-current="page" href="{{ path('home_page', {'page':1}) }}">Liste des restaurants</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if currentPath in ['/restaurateur/','/client/'] %} active {% endif %}" href="{{ path('home_page_private') }}">Espace privé</a>

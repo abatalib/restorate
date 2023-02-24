@@ -16,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RestaurantRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Restaurant::class);
@@ -39,13 +40,30 @@ class RestaurantRepository extends ServiceEntityRepository
         }
     }
 
-//    public function findOneBySomeField($value): ?Restaurant
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getRestaurants(array $criteria, array $pagination)
+    {
+
+        $query= $this->createQueryBuilder('r');
+
+        if(!empty($criteria)) {
+            if (!empty($criteria['name'])) {
+                $name = $criteria['name'];
+                $query = $query->andWhere('r.name LIKE :nameR');
+                $query->setparameter('nameR', "%$name%");
+            }
+
+            if (!empty($criteria['city'])) {
+                $query = $query->andWhere('r.city = :city');
+                $query->setparameter('city', $criteria['city']);
+            }
+        }else {
+            $query = $query->setMaxResults($pagination[0])->setFirstResult($pagination[1]);
+        }
+
+        $query = $query->orderBy("r.created_at",'DESC');
+
+
+        $query=$query->getquery();
+        return $query->getresult();
+    }
 }
