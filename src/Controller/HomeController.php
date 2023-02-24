@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Recherche;
-use App\Entity\Restaurant;
 use App\Form\RechercheType;
-use App\Form\RestaurantType;
 use App\Repository\RestaurantRepository;
 use App\Service\RestaurantService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,13 +19,14 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/", name="home_page_racine", methods={"GET","POST"})
      * @Route("/page/{page}", name="home_page", methods={"GET","POST"})
      *
      */
     public function index(RestaurantService $restaurantService,
                           RestaurantRepository $restaurantRepository,
                           Request $request,
-                          ?int $page): Response
+                          ?int $page=0): Response
     {
         $criteria=[];
         //////////////si l'utilisateur a lancé une recherche/////////
