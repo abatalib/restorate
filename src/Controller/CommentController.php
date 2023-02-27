@@ -117,7 +117,7 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() &&
             $resp!="") {
 
-            $review->setMessage($resp);
+            $review->setResp($resp);
 
             $manager->persist($review);
             $manager->flush();

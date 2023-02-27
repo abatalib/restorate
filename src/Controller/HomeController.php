@@ -36,6 +36,7 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            //récupérer les critères de recherche
             $restoName = $form->get("name")->getData() ?? [];
             $cityName = $form->get("city")->getData() ?? [];
                 if($restoName!=null){
@@ -51,7 +52,6 @@ class HomeController extends AbstractController
         if($page>0) $page--;
 
         $result=$restaurantRepository->getRestaurants($criteria,[$nbrPerPage, $page*$nbrPerPage]);
-//            findBy($criteria,['created_at'=>'DESC'], $nbrPerPage, $page*$nbrPerPage) ?? [];
         $newResult=$restaurantService->getRestaurants($result) ?? [];
 
         //params à passer pour la pagination

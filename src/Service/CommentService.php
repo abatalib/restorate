@@ -34,14 +34,14 @@ class CommentService
 
     public function verifyBeforeRespComment(Review $review, UserInterface $currentUser): string
     {
+        //test si on a déjà répondu à ce commentaire
+        if($review->getResp())
+            return "Propriétaire a déjà répondu";
+
         //test s'il s'agit du restaurateur propriétaire
         $owner=$review->getRestaurant()->getUser()->getId();
         if($owner!=$currentUser->getId())
             return "Seul le propriétaire du restaurant pourrait répondre";
-
-        //test si on a déjà répondu à ce commentaire
-        if($review->getResp())
-            return "Propriétaire a déjà répondu";
 
         return "ok";
     }

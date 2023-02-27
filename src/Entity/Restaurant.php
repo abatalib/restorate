@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,14 +14,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=RestaurantRepository::class)
  * @UniqueEntity(fields = {"name"},message="Nom restaurant existe déjà")
+ * @ApiResource(
+ *     normalizationContext={"groups"={"restaurant:read:list"}},
+ *     collectionOperations={
+ *     "get"={}
+ *     },
+ *     itemOperations={
+ *     "get"={}
+ *     }
+ *     )
  */
+
+
 class Restaurant
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list"})
+     * @Groups({"restaurant:read:list"})
      */
     private $id;
 
@@ -28,13 +40,13 @@ class Restaurant
      * @ORM\Column(type="string", length=255)
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="Le nom du restaurant est obligatoire")
-     * @Groups({"list"})
+     * @Groups({"restaurant:read:list"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"list"})
+     * @Groups({"restaurant:read:list"})
      */
     private $created_at;
 
@@ -45,20 +57,20 @@ class Restaurant
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="restaurant", orphanRemoval=true)
-     * @Groups({"list"})
+     * @Groups({"restaurant:read:list"})
      */
     private $reviews;
 
     /**
      * @ORM\OneToMany(targetEntity=Media::class, mappedBy="restaurant", orphanRemoval=true)
-     * @Groups({"list"})
+     * @Groups({"restaurant:read:list"})
      */
     private $medias;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="restaurants")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"list"})
+     * @Groups({"restaurant:read:list"})
      */
     private $user;
 

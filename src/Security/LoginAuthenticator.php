@@ -2,11 +2,13 @@
 
 namespace App\Security;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -62,5 +64,16 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
+
+    public function start(Request $request, AuthenticationException $authException = null): Response
+    {
+        if(in_array('application/json', $request->getAcceptableContentTypes())){
+            return new JsonResponse(null,Response::HTTP_UNAUTHORIZED);
+        }
+        $url = $this->getLoginUrl($request);
+
+        return new RedirectResponse($url);
     }
 }

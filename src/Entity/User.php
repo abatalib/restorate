@@ -2,16 +2,30 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user:read:list"}},
+ *     denormalizationContext={"groups"={"user:write:data"}},
+ *     collectionOperations={
+ *      "get"={},
+ *     },
+ *     itemOperations={
+ *      "get"={},
+ *      "put"={},
+ *      "delete"={}
+ *     }
+ * )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -19,27 +33,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:read:list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read:list"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read:list"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user:read:list"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false, unique=true)
      * @Assert\NotBlank(message="Username est obligatoire!")
+     * @Groups({"user:read:list"})
      */
     private $username;
 
@@ -62,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Restaurant::class, mappedBy="user")
+     * @Groups({"user:read:list"})
      */
     private $restaurants;
 

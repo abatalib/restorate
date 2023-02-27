@@ -27,6 +27,18 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+    /**
+     * @Route ("/api/login", name="api_login")
+     */
+    public function apiLogin(): Response
+    {
+        return $this->json([
+          'username'=>$this->getUser()->getUsername(),
+          'roles'=>$this->getUser()->getRoles(),
+
+        ]);
+    }
+
 
     /**
      * @Route("/logout", name="app_logout")
@@ -34,5 +46,13 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
 //        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    /**
+     * @Route("/api/logout", name="api_logout")
+     */
+    public function apiLogout()
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

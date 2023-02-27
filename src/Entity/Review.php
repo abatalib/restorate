@@ -2,12 +2,22 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ReviewRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"review:read:list"}},
+ *     denormalizationContext={"groups"={"review:write:data"}},
+ *     collectionOperations={
+ *      "get"={},
+ *      "post"={}
+ *     }
+ * )
  */
 class Review
 {
@@ -22,6 +32,7 @@ class Review
      * @ORM\ManyToOne(targetEntity=Restaurant::class, inversedBy="reviews")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank (message="Le restaurant est obligatoire!")
+     * @Groups({"review:read:list","review:write:data"})
      */
     private $restaurant;
 
@@ -29,17 +40,20 @@ class Review
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank (message="L'utilisateur est obligatoire!")
+     * @Groups({"review:read:list","review:write:data"})
      */
     private $user;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank (message="Message est obligatoire!")
+     * @Groups({"review:read:list","review:write:data"})
      */
     private $message;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"review:read:list","review:write:data"})
      */
     private $note;
 
@@ -50,6 +64,7 @@ class Review
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"review:read:list","review:write:data"})
      */
     private $resp;
 
