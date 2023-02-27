@@ -37,11 +37,11 @@ Lancer le navigateur sur l'adresse suivante :
 # Ressources
 
 <b><i>Pour la mise en oeuvre du projet</i></b>
-[![IMAGE ALT TEXT](https://abatalib.com/img_github/install_restorate.png)](https://youtu.be/BqlJfHAxT8s "Install Restorate")
+[![IMAGE ALT TEXT](https://abatalib.com/img_github/install_restorate.png)](https://youtu.be/ly6ohscQHZg "Install Restorate")
 > https://youtu.be/BqlJfHAxT8s
 
 
 <b><i>Présentation de Restorate</i></b>
-[![IMAGE ALT TEXT](https://abatalib.com/img_github/print_restorate_page.png)](https://youtu.be/ly6ohscQHZg "Préz Restorate")
+[![IMAGE ALT TEXT](https://abatalib.com/img_github/print_restorate_page.png)](https://youtu.be/BqlJfHAxT8s "Préz Restorate")
 > https://youtu.be/ly6ohscQHZg
 
