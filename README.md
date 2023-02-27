@@ -36,12 +36,12 @@ Lancer le navigateur sur l'adresse suivante :
 
 # Ressources
 
-<i>Pour la mise en oeuvre du projet</i>
+<b><i>Pour la mise en oeuvre du projet</i></b>
 [![IMAGE ALT TEXT](https://abatalib.com/img_github/install_restorate.png)](https://youtu.be/BqlJfHAxT8s "Install Restorate")
 > https://youtu.be/BqlJfHAxT8s
 
 
-<i>Présentation de Restorate</i>
+<b><i>Présentation de Restorate</i></b>
 [![IMAGE ALT TEXT](https://abatalib.com/img_github/print_restorate_page.png)](https://youtu.be/ly6ohscQHZg "Préz Restorate")
 > https://youtu.be/ly6ohscQHZg
 
